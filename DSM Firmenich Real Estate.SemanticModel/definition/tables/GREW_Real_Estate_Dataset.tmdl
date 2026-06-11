@@ -1,0 +1,157 @@
+table GREW_Real_Estate_Dataset
+	lineageTag: fd8c89cf-dc49-485a-bf9b-ec250660bc84
+
+	column Site
+		dataType: string
+		lineageTag: c363f8bf-7848-49e5-bf42-477d8ee779a3
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: Site
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: f572e701-7abc-4ba0-a72d-ff4eab5e0790
+		dataCategory: County
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 38e49207-418c-4f53-8d75-1f6636b4b9f3
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Total_Workstations
+		dataType: int64
+		formatString: 0
+		lineageTag: e9c1e723-3c45-4e59-a344-6622eb76feb3
+		summarizeBy: sum
+		sourceColumn: Total_Workstations
+
+		annotation SummarizationSetBy = Automatic
+
+	column Occupied_Workstations
+		dataType: int64
+		formatString: 0
+		lineageTag: 8b9b28e8-993b-4bda-ada8-17c98752e1f7
+		summarizeBy: sum
+		sourceColumn: Occupied_Workstations
+
+		annotation SummarizationSetBy = Automatic
+
+	column Employees_Assigned
+		dataType: int64
+		formatString: 0
+		lineageTag: 7cfa8454-9870-4048-8db4-645504af3cea
+		summarizeBy: sum
+		sourceColumn: Employees_Assigned
+
+		annotation SummarizationSetBy = Automatic
+
+	column Lease_Cost_USD
+		dataType: int64
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 02db1462-d9be-4aaa-a40b-59b77b7fb26a
+		summarizeBy: sum
+		sourceColumn: Lease_Cost_USD
+
+		annotation SummarizationSetBy = Automatic
+
+	column Lease_Renewal
+		dataType: string
+		lineageTag: 7ab9f7bc-f9b8-4aea-a330-ddeb83ddcaf6
+		summarizeBy: none
+		sourceColumn: Lease_Renewal
+
+		annotation SummarizationSetBy = Automatic
+
+	column Occupancy_%
+		dataType: double
+		lineageTag: 5d033869-9f54-4428-beb7-9592088b0aea
+		summarizeBy: sum
+		sourceColumn: Occupancy_%
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Cost_per_Occupied_WS
+		dataType: double
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 29705361-ccfb-467c-9b7d-e76b5e104bef
+		summarizeBy: sum
+		sourceColumn: Cost_per_Occupied_WS
+
+		annotation SummarizationSetBy = Automatic
+
+	column Cost_per_Employee
+		dataType: double
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: b30deaa2-a60b-488f-8e86-d36c045db9eb
+		summarizeBy: sum
+		sourceColumn: Cost_per_Employee
+
+		annotation SummarizationSetBy = Automatic
+
+	column Latitude
+		dataType: double
+		lineageTag: c895cc3d-cfb0-4809-ac4b-ba00c2344ca5
+		dataCategory: Latitude
+		summarizeBy: sum
+		sourceColumn: Latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Longitude
+		dataType: double
+		lineageTag: 21f75e1f-94b2-4fc8-a280-81e3fb972ada
+		dataCategory: Longitude
+		summarizeBy: sum
+		sourceColumn: Longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Lease Renewal Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 7d4c5f9b-3161-4590-adee-4250b6d15f44
+		summarizeBy: none
+		sourceColumn: Lease Renewal Date
+
+		variation Variation
+			isDefault
+			relationship: 10af02a9-b51a-4e95-9ddd-1a6bec319af6
+			defaultHierarchy: LocalDateTable_82806fe2-5a5e-43ed-bd06-292b30ae9bec.'Date Hierarchy'
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition GREW_Real_Estate_Dataset = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\mnkum\Downloads\GREW_Real_Estate_Dataset.csv"),[Delimiter=",", Columns=13, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Site", type text}, {"Country", type text}, {"Region", type text}, {"Total_Workstations", Int64.Type}, {"Occupied_Workstations", Int64.Type}, {"Employees_Assigned", Int64.Type}, {"Lease_Cost_USD", Int64.Type}, {"Lease_Renewal", type text}, {"Occupancy_%", type number}, {"Cost_per_Occupied_WS", type number}, {"Cost_per_Employee", type number}, {"Latitude", type number}, {"Longitude", type number}}),
+				    #"Added Custom Column" = Table.AddColumn(#"Changed Type", "Lease Renewal Date", each Text.Combine({Text.Start([Lease_Renewal], 4), "-12-31"}), type text),
+				    #"Replaced Value" = Table.ReplaceValue(#"Added Custom Column","Americas","USA",Replacer.ReplaceText,{"Region"})
+				in
+				    #"Replaced Value"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

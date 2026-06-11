@@ -1,0 +1,5 @@
+relationship 10af02a9-b51a-4e95-9ddd-1a6bec319af6
+	joinOnDateBehavior: datePartOnly
+	fromColumn: GREW_Real_Estate_Dataset.'Lease Renewal Date'
+	toColumn: LocalDateTable_82806fe2-5a5e-43ed-bd06-292b30ae9bec.Date
+

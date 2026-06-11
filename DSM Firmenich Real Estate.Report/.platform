@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "DSM Firmenich Real Estate"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "cdabbbc0-a0c0-4431-ad3a-43f4304254a7"
+  }
+}

@@ -1,0 +1,71 @@
+table '.Measures Table'
+	lineageTag: 214bb7fc-f0b8-49fa-bda3-813d1aa1ea83
+
+	measure 'Total Workstations' = SUM(GREW_Real_Estate_Dataset[Total_Workstations])
+		formatString: 0
+		lineageTag: 41ff592d-d304-43e6-b618-8fab10fd685c
+
+	measure 'Total Occupied Workstations' = SUM(GREW_Real_Estate_Dataset[Occupied_Workstations])
+		formatString: 0
+		lineageTag: 8a62d975-3252-46f5-807b-0861a5e85c45
+
+	measure 'Occupancy %' = DIVIDE([Total Occupied Workstations],[Total Workstations])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: b7f7fc9f-ddc0-4c12-a2b1-3196e2178805
+
+	measure 'Total Employees' = SUM(GREW_Real_Estate_Dataset[Employees_Assigned])
+		formatString: 0
+		lineageTag: 22a71dcf-ca8c-4bcf-b809-bc65b3dd38ee
+
+	measure 'Total Lease Cost' = SUM(GREW_Real_Estate_Dataset[Lease_Cost_USD])
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 25a3d783-a761-4486-b208-590376cd6562
+
+	measure 'Cost Per Employee' = DIVIDE([Total Lease Cost], [Total Employees],0)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: eae4cc1e-9074-46bd-a6e7-8da2f925076e
+
+	measure 'Lease Cost Expiring Soon' =
+			
+			CALCULATE(
+			    SUM(GREW_Real_Estate_Dataset[Lease_Cost_USD]),
+			    FILTER(
+			        GREW_Real_Estate_Dataset,
+			        YEAR(GREW_Real_Estate_Dataset[Lease Renewal Date]) <= YEAR(TODAY()) + 2
+			    )
+			)
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 4f77cf2d-7cae-4e76-ae0e-41c11ca92fd0
+
+	measure '% Portfolio at Risk' =
+			
+			DIVIDE(
+			    [Lease Cost Expiring Soon],
+			    [Total Lease Cost],
+			    0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6ef68342-782b-446f-9840-1c8df84dc84a
+
+	measure '100 %' = 1
+		formatString: 0%;-0%;0%
+		lineageTag: 545fb524-80ca-4ab3-bba8-035d05718df1
+
+	column Column
+		isHidden
+		formatString: 0
+		lineageTag: 774ef2db-eed7-4299-bc6f-b068d44f410d
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Column]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition '.Measures Table' = calculated
+		mode: import
+		source = Row("Column", BLANK())
+
+	annotation PBI_Id = 380340ccdab24deca8295c4ee220b6ce
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

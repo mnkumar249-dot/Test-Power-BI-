@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "DSM Firmenich Real Estate"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "39c6b4b5-93d1-4b88-8661-74e70ca46971"
+  }
+}
